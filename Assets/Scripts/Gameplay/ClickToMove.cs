@@ -46,7 +46,7 @@ public class ClickToMove : MonoBehaviour {
 
         CheckDoubleClick();
 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Fire1"))
         {
             navMeshAgent.ResetPath();
             if(Physics.Raycast(ray, out hit, 1000))
@@ -107,7 +107,29 @@ public class ClickToMove : MonoBehaviour {
 
 
 
-        anim.SetBool("isWalking", walking);
+        //anim.SetBool("isWalking", walking);
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            navMeshAgent.speed = 7f;
+            anim.SetBool("isRunning", walking);
+            anim.SetBool("isWalking", false);
+        }
+        else
+        {
+            navMeshAgent.speed = 3f;
+            anim.SetBool("isRunning", false);
+            anim.SetBool("isWalking", walking);
+        }
+
+        if (!walking)
+        {
+            anim.SetBool("isIdling", true);
+        }
+        else
+        {
+            anim.SetBool("isIdling", false);
+        }
 
 	}
 
@@ -133,6 +155,8 @@ public class ClickToMove : MonoBehaviour {
 
             if (Time.time > nextAttack)
             {
+                targetedEnemy.GetComponent<Interectable>().Interact();
+
                 nextAttack = Time.time + AttackRate;
                 anim.SetBool("MeleeAttack", true);
             }
